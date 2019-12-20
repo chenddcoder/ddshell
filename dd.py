@@ -2,50 +2,35 @@
 # （1）启动后读取配置文件，加载命令并展示
 # （2）:e可编辑配置文件，编辑完后:qw退出（实际上用了vi工具）
 # （3）配置文件格式tag=value形式，例如（查看cpu使用率=ps aux)
-import sys
 import os
 import utils
 
-mainconf = "conf/menu.conf"
-mainmenu = {}
-
-
-def menu(file):
-    utils.mkdir(os.path.dirname(file))
-    menuId = 0
-    menuDem = {}
-    with open(file, "r+") as ff:
-        for l in ff.readlines():
-            kv = l.split("=")
-            menuDem[str(menuId)] = kv
-            menuId = menuId + 1
-    return menuDem
-
-
-mainmenu = menu(mainconf)
-
-
-def showmenu(m):
-    os.system("clear")
-    for k in m.keys():
-        print(k + ":" + m[k][0])
-
-
-showmenu(mainmenu)
+path = "conf"  # 全局路径，初始路径
+menu = utils.showmenu(path)
 while True:
     a = raw_input("请选择：")
     if a == "e":
-        os.system("vi " + mainconf)
+        os.system("vi " + utils.menuconf(path))
     elif a == "m":
-        # print("列出所有菜单")
-        showmenu()
-    else:
-        if a in mainmenu.keys():
-            v = mainmenu[a][1]#取菜单值,>表示进入子菜单
+        print("列出所有菜单")
+        menu = utils.showmenu(path)
+    elif a == "q":
+        if path == "conf":
+            break
+        path = utils.predir(path)
+        menu = utils.showmenu(path)
+    elif a.isdigit():
+        num = int(a)  # 菜单编号
+        if num < len(menu):
+            v = menu[num][1]  # 取菜单值,>表示进入子菜单
             if v.startswith(">"):
-                print("进入子目录"+a[1:])
+                sub = v[1:]
+                path = utils.subdir(path, sub)
+                menu = utils.showmenu(path)
             else:
                 os.system(v)
         else:
             print("无此选项")
-            showmenu()
+            menu = utils.showmenu(path)
+    else:
+        print("无效操作")
