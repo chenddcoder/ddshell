@@ -1,3 +1,3 @@
 /conf
 /.idea
-**/*.conf
+*.conf
