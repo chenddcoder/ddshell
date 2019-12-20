@@ -31,6 +31,8 @@ def config(path):
     mkdir(os.path.dirname(path))
     # 数组返回
     menuDem = []
+    if not os.path.exists(path):
+        return menuDem
     with open(path, "r+") as ff:
         for l in ff.readlines():
             l = l.strip()
