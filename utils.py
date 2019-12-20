@@ -33,7 +33,7 @@ def config(path):
     menuDem = []
     with open(path, "r+") as ff:
         for l in ff.readlines():
-            l = l.rstrip()
+            l = l.strip()
             kv = l.split("=", 2)
             menuDem.append(kv)
     return menuDem
@@ -66,5 +66,4 @@ def showmenuV(m, path):
 
 def menuconf(path):
     path = path.strip()
-    path = path.rstrip()
     return path + "/menu.conf"
